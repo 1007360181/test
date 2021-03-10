@@ -1,0 +1,17 @@
+训练train
+make train MODEL=yolo_mobilev1 DEPTHMUL=0.75 MAXEP=30 ILR=0.001 DATASET=voc CLSNUM=4 IAA=False BATCH=4 END_EPOCH=10
+
+将keras生成的h5结构文件转化成tflite文件
+toco --output_file mobile_yolo.tflite --keras_model_file logs/ep019-loss46.933-val_loss37.935.h5
+将转化成的tflite文件转化为kmodel文件
+D:\nncase\ncc compile mobile_yolo.tflite mobile_yolo.kmodel -i tflite -o kmodel -t k210 --dataset nncase_images
+
+验证h5模型
+make inference MODEL=yolo_mobilev1 DEPTHMUL=0.75 CLSNUM=4 CKPT=log/20201227-220211/yolo_model.h5 IMG=data/stone.jpg
+
+cmake .. –DPROJ=hello_world –G “MinGW Makefiles”
+
+继续训练
+make train MODEL=yolo_mobilev1 DEPTHMUL=0.75 MAXEP=10 ILR=0.001 DATASET=voc CLSNUM=4 IAA=True BATCH=4 MAXEP=50 CKPT=log/20201208-200945/yolo_model.h5
+
+make inference MODEL=yolo_mobilev1 DEPTHMUL=0.75 CLSNUM=20 CKPT=asset/yolo_model.h5 IMG=data/why.jpg
